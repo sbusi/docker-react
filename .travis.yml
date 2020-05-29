@@ -6,4 +6,16 @@ before_install:
   - docker build -t skbusi/docker-react -f Dockerfile.dev .
 
 script:
-  - docker run skbusi/docker-react npm run test -- --coverage
+  - docker run -e CI=true skbusi/docker-react npm run test -- --coverage
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-west-2"
+  app: "docker-sbusi-frontend"
+  env: "DockerSbusiFrontend-env"
+  bucket_name: "elasticbeanstalk-us-west-2-857414306949"
+  bucket_path: "docker-sbusi-frontend"
+  on:
+    branch: master
+  access_key_id: "$AWS_ACCESS_KEY"
+  secret_access_key: "$AWS_SECRET_KEY"
